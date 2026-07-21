@@ -55,7 +55,6 @@
             font-family: 'Playfair Display', serif;
         }
 
-        /* ─── SIDEBAR ─── */
         .sidebar {
             width: var(--sidebar-w);
             background: var(--dark);
@@ -197,7 +196,6 @@
             border-color: var(--gold);
         }
 
-        /* ─── MAIN CONTENT ─── */
         .main-content {
             margin-left: var(--sidebar-w);
             flex: 1;
@@ -206,7 +204,6 @@
             flex-direction: column;
         }
 
-        /* ─── TOP BAR ─── */
         .topbar {
             background: var(--white);
             padding: 1rem 2rem;
@@ -253,7 +250,6 @@
             color: var(--gold);
         }
 
-        /* ─── PAGE WRAPPER ─── */
         .page {
             padding: 2rem;
             display: none;
@@ -263,7 +259,6 @@
             display: block;
         }
 
-        /* ─── STAT CARDS ─── */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -334,7 +329,6 @@
             color: var(--dark);
         }
 
-        /* ─── CARDS ─── */
         .card {
             background: var(--white);
             border-radius: 16px;
@@ -367,7 +361,6 @@
             padding: 1.5rem;
         }
 
-        /* ─── FORM ELEMENTS ─── */
         .form-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -452,7 +445,6 @@
             padding-left: 2rem;
         }
 
-        /* ─── IMAGE UPLOAD ZONE ─── */
         .image-upload-section {
             grid-column: 1 / -1;
         }
@@ -544,12 +536,10 @@
             gap: 0.4rem;
         }
 
-        /* Hidden real file input */
         #productImages {
             display: none;
         }
 
-        /* Image previews grid */
         .image-previews {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
@@ -635,7 +625,6 @@
             color: var(--gold);
         }
 
-        /* Upload progress (optional) */
         .upload-progress {
             display: none;
             margin-top: 0.8rem;
@@ -653,7 +642,6 @@
             transition: width 0.4s ease;
         }
 
-        /* ─── SUBMIT BTN ─── */
         .form-actions {
             display: flex;
             gap: 1rem;
@@ -709,7 +697,6 @@
             color: var(--maroon);
         }
 
-        /* ─── PRODUCTS TABLE ─── */
         .products-toolbar {
             display: flex;
             align-items: center;
@@ -886,7 +873,6 @@
             color: white;
         }
 
-        /* ─── TOAST ─── */
         .toast-stack {
             position: fixed;
             bottom: 1.5rem;
@@ -955,7 +941,6 @@
             }
         }
 
-        /* ─── MESSAGE BLOCK ─── */
         .msg-block {
             padding: 0.9rem 1.2rem;
             border-radius: 10px;
@@ -987,7 +972,6 @@
             flex-shrink: 0;
         }
 
-        /* ─── MOBILE ─── */
         .mobile-menu-btn {
             display: none;
             position: fixed;
@@ -1225,7 +1209,7 @@
             </div>
         </div>
 
-        <!-- PAGE: ADD PRODUCT (FIXED DROPDOWNS + IMGBB) -->
+        <!-- PAGE: ADD PRODUCT -->
         <div class="page" id="page-addProduct">
 
             <div id="addProductMsg" class="msg-block"></div>
@@ -1258,15 +1242,12 @@
                         </p>
                     </div>
 
-                    <!-- Upload progress (optional) -->
                     <div class="upload-progress" id="uploadProgress">
                         <div class="upload-progress-bar" id="uploadProgressBar"></div>
                     </div>
 
-                    <!-- Image previews -->
                     <div class="image-previews" id="imagePreviews"></div>
 
-                    <!-- Count note -->
                     <p class="image-count-note" id="imageCountNote" style="display:none;">
                         <i class="fas fa-info-circle"></i>
                         <span id="imageCountText"></span> · First image is shown as the main thumbnail
@@ -1295,7 +1276,6 @@
                                 placeholder="Describe the piece — craftsmanship, occasion, details…"></textarea>
                         </div>
 
-                        <!-- UPDATED CATEGORY DROPDOWN (enum values) -->
                         <div class="form-group">
                             <label>Category <span class="req">*</span></label>
                             <select id="prodCategory">
@@ -1309,7 +1289,6 @@
                             </select>
                         </div>
 
-                        <!-- UPDATED METAL TYPE DROPDOWN (enum values) -->
                         <div class="form-group">
                             <label>Metal Type <span class="req">*</span></label>
                             <select id="prodMetal">
@@ -1481,16 +1460,17 @@
     <div class="toast-stack" id="toastStack"></div>
 
     <script>
-        // ────────────────────────────────────────────
-        //  STATE
-        // ────────────────────────────────────────────
-        const API_URL = 'http://16.16.143.248:5000/api';
+        // ✅ FIXED: Works everywhere - localhost and AWS!
+        const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+            ? 'http://localhost:5000/api'
+            : '/api';
+            
         const IMGBB_API_KEY = '6f9bd3c4179f3a9dba369ffafa732768'; // your imgBB key
 
         let token = localStorage.getItem('token');
         let user = JSON.parse(localStorage.getItem('user') || 'null');
-        let products = []; // will be fetched from backend
-        let uploadedImages = []; // array of { file, previewUrl } – preview for display only
+        let products = [];
+        let uploadedImages = [];
 
         // ────────────────────────────────────────────
         //  INIT
@@ -1582,10 +1562,10 @@
         }
 
         // ────────────────────────────────────────────
-        //  IMAGE UPLOAD (only preview – no backend upload yet)
+        //  IMAGE UPLOAD
         // ────────────────────────────────────────────
         const MAX_IMAGES = 5;
-        const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
+        const MAX_FILE_SIZE = 5 * 1024 * 1024;
 
         function initImageUpload() {
             const fileInput = document.getElementById('productImages');
@@ -1699,7 +1679,7 @@
             });
             const data = await response.json();
             if (data.success) {
-                return data.data.url; // permanent URL
+                return data.data.url;
             } else {
                 throw new Error(data.error?.message || 'imgBB upload failed');
             }
@@ -1737,7 +1717,6 @@
             submitBtn.disabled = true;
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading images…';
 
-            // 1. Upload all images to imgBB
             const imageUrls = [];
             try {
                 for (const img of uploadedImages) {
@@ -1753,7 +1732,6 @@
 
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving product…';
 
-            // 2. Send product data with image URLs to your backend
             const productData = {
                 name,
                 description: desc,
@@ -1786,7 +1764,7 @@
                     const data = await res.json();
                     showToast('Product added successfully!', 'success');
                     showMsgBlock(msgBlock, '✓ Product listed with permanent images.', 'success');
-                    await fetchProducts(); // refresh list
+                    await fetchProducts();
                     resetProductForm();
                     setTimeout(() => showPage('myProducts', null), 1500);
                 } else {
@@ -1805,9 +1783,6 @@
             document.getElementById('addProductMsg').scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
 
-        // ────────────────────────────────────────────
-        //  RESET FORM
-        // ────────────────────────────────────────────
         function resetProductForm() {
             ['prodName', 'prodDesc', 'prodPurity', 'prodWeight', 'prodGemstone',
                 'prodPrice', 'prodMrp', 'prodMaking', 'prodSku'
@@ -1827,9 +1802,6 @@
             document.getElementById('imageCountNote').style.display = 'none';
         }
 
-        // ────────────────────────────────────────────
-        //  PRODUCT GRIDS
-        // ────────────────────────────────────────────
         function renderAllProductGrids() {
             renderProductGrid('allProductsGrid', products);
             renderProductGrid('recentProductsGrid', products.slice(-4).reverse());
@@ -1884,8 +1856,6 @@
 
         function deleteProduct(id) {
             if (!confirm('Remove this product from your listings?')) return;
-            // Optional: implement DELETE call to backend
-            // For now, just remove locally (will reappear on refresh)
             products = products.filter(p => p._id !== id);
             renderAllProductGrids();
             updateStatCard();
@@ -1896,9 +1866,6 @@
             document.getElementById('stat-products').textContent = products.length;
         }
 
-        // ────────────────────────────────────────────
-        //  MESSAGE BLOCKS & TOAST
-        // ────────────────────────────────────────────
         function showMsgBlock(el, msg, type) {
             el.className = `msg-block ${type} show`;
             el.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i><span>${msg}</span>`;
@@ -1922,4 +1889,4 @@
         }
     </script>
 </body>
-</html> 
+</html>
