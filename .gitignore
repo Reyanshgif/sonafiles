@@ -1,6 +1,10 @@
 node_modules/ 
-uploads/ 
 .env 
-*.log 
+.env.local 
+package-lock.json 
+uploads/ 
 .DS_Store 
-backend/node_modules/ 
+Thumbs.db 
+.vscode/ 
+logs/ 
+*.log 

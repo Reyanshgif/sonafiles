@@ -48,7 +48,6 @@
             margin: 0 auto;
             padding: 0 5%;
         }
-        /* ===== HEADER ===== */
         header {
             position: fixed;
             width: 100%;
@@ -166,7 +165,6 @@
         .btn-block:hover {
             background: var(--gold);
         }
-        /* ===== HERO ===== */
         .hero {
             margin-top: 80px;
             height: 90vh;
@@ -198,7 +196,6 @@
             gap: 1rem;
             justify-content: center;
         }
-        /* ===== SECTIONS ===== */
         section {
             padding: 5rem 0;
         }
@@ -227,7 +224,6 @@
             color: var(--gray);
             font-size: 1.1rem;
         }
-        /* ===== CATEGORIES ===== */
         .category-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -255,7 +251,6 @@
             text-align: center;
             color: var(--maroon);
         }
-        /* ===== PRODUCTS ===== */
         .product-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -324,7 +319,6 @@
             font-weight: 700;
             margin: 1rem 0;
         }
-        /* ===== VENDOR SECTION ===== */
         .vendor-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -364,7 +358,6 @@
             color: var(--gray);
             margin-bottom: 1rem;
         }
-        /* ===== MODALS ===== */
         .modal {
             display: none;
             position: fixed;
@@ -412,7 +405,6 @@
         .modal-close:hover {
             color: var(--maroon);
         }
-        /* ===== FORMS ===== */
         .form-group {
             margin-bottom: 1.2rem;
         }
@@ -445,7 +437,6 @@
             grid-template-columns: 1fr 1fr;
             gap: 1rem;
         }
-        /* ===== MESSAGES ===== */
         .message {
             padding: 1rem;
             margin: 1rem 0;
@@ -464,7 +455,6 @@
             border: 1px solid #f5c6cb;
             display: block;
         }
-        /* ===== TOAST ===== */
         .toast {
             position: fixed;
             bottom: 30px;
@@ -479,7 +469,6 @@
             gap: 1rem;
             z-index: 3000;
         }
-        /* ===== FOOTER ===== */
         footer {
             background: var(--dark);
             color: var(--white);
@@ -536,7 +525,6 @@
             border-top: 1px solid #333;
             color: #aaa;
         }
-        /* ===== USER MENU ===== */
         .user-menu {
             position: relative;
         }
@@ -888,7 +876,11 @@
     </div>
 
     <script>
-        const API_URL = 'http://16.16.143.248:5000/api';
+        // ✅ FIXED: Works everywhere - localhost and AWS!
+        const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+            ? 'http://localhost:5000/api'
+            : '/api';
+
         let token = localStorage.getItem('token');
         let user = JSON.parse(localStorage.getItem('user'));
         let currentOrderProduct = null;
@@ -966,6 +958,9 @@
         async function fetchProducts() {
             try {
                 const response = await fetch(`${API_URL}/products`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
                 const data = await response.json();
                 
                 if (data.success) {
@@ -1163,7 +1158,10 @@
         console.log('📡 Sending to:', `${API_URL}/orders`);
         const response = await fetch(`${API_URL}/orders`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`  // ✅ FIXED: Added authentication!
+            },
             body: JSON.stringify(orderData)
         });
         
