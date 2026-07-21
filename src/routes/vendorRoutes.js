@@ -26,6 +26,7 @@ router.post('/register', protect, async (req, res) => {
       businessType,
       contactEmail,
       contactPhone,
+      password,
       gstNumber,
       panNumber,
       address,
@@ -48,11 +49,12 @@ router.post('/register', protect, async (req, res) => {
 
     // Create vendor document linked to this user
     const vendor = await Vendor.create({
-      user: req.userId,                         // ✅ required field
+      user: req.userId,
       shopName: businessName,
       ownerName: `${user.firstName} ${user.lastName}`,
       email: contactEmail || user.email,
       phone: contactPhone || user.phone,
+      password: password,
       businessType,
       gstNumber,
       panNumber,
@@ -63,10 +65,9 @@ router.post('/register', protect, async (req, res) => {
         pincode,
         country: 'India'
       }
-      // isApproved defaults to false
     });
 
-    // Optionally update the user's role to 'vendor'
+    // Update user role to 'vendor'
     user.role = 'vendor';
     await user.save();
 
@@ -90,7 +91,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-// GET /api/vendors/dashboard/me – Get own vendor profile (using user reference)
+// GET /api/vendors/dashboard/me – Get own vendor profile
 router.get('/dashboard/me', protect, async (req, res) => {
   try {
     const vendor = await Vendor.findOne({ user: req.userId }).populate('user', 'firstName lastName email phone');

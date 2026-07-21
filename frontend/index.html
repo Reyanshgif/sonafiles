@@ -732,6 +732,12 @@
                 <label>Phone</label>
                 <input type="text" id="vendorPhone" readonly>
             </div>
+
+            <!-- ✅ ADDED: Password field for vendor registration -->
+            <div class="form-group">
+                <label class="required">Create Password</label>
+                <input type="password" id="vendorPassword" placeholder="Create a password (min 6 characters)" required minlength="6">
+            </div>
            
             <div class="form-group">
                 <label>GST (Optional)</label>
@@ -1276,6 +1282,7 @@
                 businessType: document.getElementById('vendorBusinessType').value,
                 contactEmail: document.getElementById('vendorEmail').value,
                 contactPhone: document.getElementById('vendorPhone').value,
+                password: document.getElementById('vendorPassword').value,  // ✅ ADDED: Password field
                 gstNumber: document.getElementById('vendorGst').value,
                 panNumber: document.getElementById('vendorPan').value,
                 address: document.getElementById('vendorAddress').value,
@@ -1283,6 +1290,12 @@
                 state: document.getElementById('vendorState').value,
                 pincode: document.getElementById('vendorPincode').value
             };
+
+            // ✅ ADDED: Validate password
+            if (!vendorData.password || vendorData.password.length < 6) {
+                showMessage('vendorMessage', 'Password is required and must be at least 6 characters', 'error');
+                return;
+            }
             
             if (!vendorData.businessName || !vendorData.businessType || !vendorData.address || !vendorData.city || !vendorData.state || !vendorData.pincode) {
                 showMessage('vendorMessage', 'Please fill required fields', 'error');

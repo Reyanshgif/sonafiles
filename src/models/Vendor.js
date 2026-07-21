@@ -5,7 +5,8 @@ const vendorSchema = new mongoose.Schema(
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
-      sparse: true  // Allow null for vendors created directly
+      required: true,
+      unique: true
     },
     shopName: {
       type: String,
